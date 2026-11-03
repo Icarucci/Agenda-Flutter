@@ -1,8 +1,10 @@
+import 'package:agenda/src/view/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:agenda/src/provider/contactos_provider.dart';
 import 'package:agenda/src/view/agregar_contacto_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Esta pantalla necesita estado para mostrar u ocultar la búsqueda y guardar el texto que escribe el usuario.
 class ContactosScreen extends StatefulWidget {
@@ -13,14 +15,26 @@ class ContactosScreen extends StatefulWidget {
 }
 
 class _ContactosScreenState extends State<ContactosScreen> {
-  // Indica si el campo de búsqueda está visible.
   bool _buscando = false;
-
-  // Guarda el texto utilizado para filtrar los contactos.
   String _textoBusqueda = '';
+
+  // Actividad 2: Modifica la clave en SharedPreferences y vuelve al Login
+  Future<void> _cerrarSesion() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false);
+
+    if (!mounted) return;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const Login()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Obtiene el Provider y escucha sus cambios.
+    // Cuando se ejecute notifyListeners(), este widget se reconstruirá para mostrar los datos actualizados.
     final contactosProvider = context.watch<ContactosProvider>();
 
     // Consulta la lista de contactos del Provider por nombre y apellido.
@@ -29,7 +43,7 @@ class _ContactosScreenState extends State<ContactosScreen> {
       return contacto.nombreCompleto.toLowerCase().contains(
         _textoBusqueda.toLowerCase(),
       );
-    }).toList();    // toList convierte el resultado en una lista.
+    }).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -52,30 +66,28 @@ class _ContactosScreenState extends State<ContactosScreen> {
                 },
               )
             : const Text('Contactos'),
-
         actions: [
           IconButton(
-            icon: Icon(
-              _buscando ? Icons.close : Icons.search,
-            ),
+            icon: Icon(_buscando ? Icons.close : Icons.search),
             tooltip: _buscando ? 'Cerrar búsqueda' : 'Buscar',
             onPressed: () {
               setState(() {
-                // Alterna entre mostrar y ocultar el campo.
                 _buscando = !_buscando;
-
                 // Limpia el filtro al cerrar la búsqueda.
                 _textoBusqueda = '';
               });
             },
           ),
+          // Actividad 2: Ítem del menú "Cerrar sesión"
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Cerrar sesión',
+            onPressed: _cerrarSesion,
+          ),
         ],
       ),
-
-      // Botón flotante para abrir la pantalla de creación de contactos.
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Abre el formulario sobre la pantalla del listado.
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -86,20 +98,17 @@ class _ContactosScreenState extends State<ContactosScreen> {
         tooltip: 'Agregar contacto',
         child: const Icon(Icons.add),
       ),
-
-      // Si la lista está vacía, muestra un mensaje.
-      // Si tiene contactos, construye una lista desplazable.
       body: contactos.isEmpty
           ? Center(
-            child: Text(contactosProvider.contactos.isEmpty
-                  ? 'No hay contactos disponibles'
-                  : 'No se encontraron contactos',
-            ),
-          )
+              child: Text(
+                contactosProvider.contactos.isEmpty
+                    ? 'No hay contactos disponibles'
+                    : 'No se encontraron contactos',
+              ),
+            )
           : ListView.builder(
               itemCount: contactos.length,
               itemBuilder: (context, index) {
-                // Obtiene el contacto correspondiente a esta fila.
                 final contacto = contactos[index];
 
                 return ListTile(
@@ -110,6 +119,33 @@ class _ContactosScreenState extends State<ContactosScreen> {
                     children: [
                       Text('Teléfono: ${contacto.telefono}'),
                       Text('Email: ${contacto.email}'),
+                    ],
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Actividad 3: Modificación
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AgregarContactoScreen(contacto: contacto),
+                            ),
+                          );
+                        },
+                      ),
+                      // Actividad 3: Baja
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          if (contacto.id != null) {
+                            contactosProvider.eliminarContacto(contacto.id!);
+                          }
+                        },
+                      ),
                     ],
                   ),
                 );
