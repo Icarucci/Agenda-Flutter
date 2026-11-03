@@ -21,8 +21,6 @@ class _ContactosScreenState extends State<ContactosScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Obtiene el Provider y escucha sus cambios.
-    // Cuando se ejecute notifyListeners(), este widget se reconstruirá para mostrar los datos actualizados.
     final contactosProvider = context.watch<ContactosProvider>();
 
     // Consulta la lista de contactos del Provider por nombre y apellido.
