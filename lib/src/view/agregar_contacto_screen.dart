@@ -124,9 +124,10 @@ class _AgregarContactoScreenState extends State<AgregarContactoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Agregar contacto'),
+        title: Text(
+          widget.contacto == null ? 'Agregar contacto' : 'Editar contacto',
+        ),
         actions: [
-          // Guarda el contacto desde la barra superior.
           IconButton(
             onPressed: _guardarContacto,
             icon: const Icon(Icons.check),
@@ -134,8 +135,6 @@ class _AgregarContactoScreenState extends State<AgregarContactoScreen> {
           ),
         ],
       ),
-
-      // Permite desplazar el formulario cuando aparece el teclado.
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
@@ -149,14 +148,12 @@ class _AgregarContactoScreenState extends State<AgregarContactoScreen> {
                 validator: _validarCampo,
               ),
               const SizedBox(height: 16),
-
               TextFormField(
                 controller: _apellidoController,
                 decoration: const InputDecoration(labelText: 'Apellido'),
                 validator: _validarCampo,
               ),
               const SizedBox(height: 16),
-
               TextFormField(
                 controller: _telefonoController,
                 keyboardType: TextInputType.phone,
@@ -164,7 +161,6 @@ class _AgregarContactoScreenState extends State<AgregarContactoScreen> {
                 validator: _validarCampo,
               ),
               const SizedBox(height: 16),
-
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -174,15 +170,12 @@ class _AgregarContactoScreenState extends State<AgregarContactoScreen> {
                 validator: _validarCampo,
               ),
               const SizedBox(height: 16),
-
               TextFormField(
                 controller: _direccionController,
                 decoration: const InputDecoration(labelText: 'Dirección'),
                 validator: _validarCampo,
               ),
               const SizedBox(height: 16),
-
-              // Abre el calendario y muestra la fecha elegida.
               OutlinedButton(
                 onPressed: _seleccionarFecha,
                 child: Text(
