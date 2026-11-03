@@ -6,7 +6,9 @@ import 'package:agenda/src/provider/contactos_provider.dart';
 
 // Necesita estado porque la fecha seleccionada puede cambiar.
 class AgregarContactoScreen extends StatefulWidget {
-  const AgregarContactoScreen({super.key});
+  final Contacto? contacto;
+
+  const AgregarContactoScreen({super.key, this.contacto});
 
   @override
   State<AgregarContactoScreen> createState() => _AgregarContactoScreenState();
@@ -86,7 +88,7 @@ class _AgregarContactoScreenState extends State<AgregarContactoScreen> {
 
     // Crea un contacto con los datos ingresados.
     // trim() sirve para eliminar los espacios al principio y al final.
-    final contacto = Contacto(
+    final nuevoContacto = Contacto(
       nombre: _nombreController.text.trim(),
       apellido: _apellidoController.text.trim(),
       telefono: _telefonoController.text.trim(),
@@ -96,9 +98,14 @@ class _AgregarContactoScreenState extends State<AgregarContactoScreen> {
     );
 
     // Agrega el contacto a la lista administrada por Provider.
-    context.read<ContactosProvider>().agregarContacto(contacto);
+    final provider = context.read<ContactosProvider>();
 
-    // Cierra este formulario y vuelve al listado.
+    if (widget.contacto == null) {
+      provider.agregarContacto(nuevoContacto);
+    } else {
+      provider.actualizarContacto(nuevoContacto);
+    }
+
     Navigator.pop(context);
   }
 
