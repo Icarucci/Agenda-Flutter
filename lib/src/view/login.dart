@@ -1,5 +1,6 @@
 import 'package:agenda/src/view/contactos_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -23,7 +24,7 @@ class _LoginState extends State<Login> {
   bool _isPasswordHidden = true;
 
   /* LOGICA DE INICIO DE SESION */
-  void _inicioSesion() {
+  Future<void> _inicioSesion() async {
     /** Se validan las credenciales del form */
     if (_formKey.currentState!.validate()) {
       final email = _emailController.text;
@@ -31,6 +32,11 @@ class _LoginState extends State<Login> {
 
       /* Comprobacion de los datos */
       if (email == _validEmail && pass == _validPassword) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+
+        if (!mounted) return;
+
         /* LOGIN CORRECTO -> Navegar a pantalla de contactos */
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -38,8 +44,8 @@ class _LoginState extends State<Login> {
             backgroundColor: Colors.green,
           ),
         );
-        //TODO: Navegar a la pantalla de contactos
-        Navigator.push(
+
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const ContactosScreen()),
         );

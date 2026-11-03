@@ -9,23 +9,42 @@ class AgregarContactoScreen extends StatefulWidget {
   const AgregarContactoScreen({super.key});
 
   @override
-  State<AgregarContactoScreen> createState() =>
-      _AgregarContactoScreenState();
+  State<AgregarContactoScreen> createState() => _AgregarContactoScreenState();
 }
 
-class _AgregarContactoScreenState
-    extends State<AgregarContactoScreen> {
+class _AgregarContactoScreenState extends State<AgregarContactoScreen> {
   // Permite validar todos los campos del formulario.
   final _formKey = GlobalKey<FormState>();
 
   // Permiten leer lo que el usuario escribe en cada campo.
-  final _nombreController = TextEditingController();
-  final _apellidoController = TextEditingController();
-  final _telefonoController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _direccionController = TextEditingController();
+  var _nombreController = TextEditingController();
+  var _apellidoController = TextEditingController();
+  var _telefonoController = TextEditingController();
+  var _emailController = TextEditingController();
+  var _direccionController = TextEditingController();
 
   DateTime? _fechaNacimiento;
+
+  @override
+  void initState() {
+    super.initState();
+    _nombreController = TextEditingController(
+      text: widget.contacto?.nombre ?? '',
+    );
+    _apellidoController = TextEditingController(
+      text: widget.contacto?.apellido ?? '',
+    );
+    _telefonoController = TextEditingController(
+      text: widget.contacto?.telefono ?? '',
+    );
+    _emailController = TextEditingController(
+      text: widget.contacto?.email ?? '',
+    );
+    _direccionController = TextEditingController(
+      text: widget.contacto?.direccion ?? '',
+    );
+    _fechaNacimiento = widget.contacto?.fechaNacimiento;
+  }
 
   // Comprueba que el campo no esté vacío.
   String? _validarCampo(String? valor) {
@@ -119,18 +138,14 @@ class _AgregarContactoScreenState
             children: [
               TextFormField(
                 controller: _nombreController,
-                decoration: const InputDecoration(
-                  labelText: 'Nombre',
-                ),
+                decoration: const InputDecoration(labelText: 'Nombre'),
                 validator: _validarCampo,
               ),
               const SizedBox(height: 16),
 
               TextFormField(
                 controller: _apellidoController,
-                decoration: const InputDecoration(
-                  labelText: 'Apellido',
-                ),
+                decoration: const InputDecoration(labelText: 'Apellido'),
                 validator: _validarCampo,
               ),
               const SizedBox(height: 16),
@@ -138,9 +153,7 @@ class _AgregarContactoScreenState
               TextFormField(
                 controller: _telefonoController,
                 keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  labelText: 'Teléfono',
-                ),
+                decoration: const InputDecoration(labelText: 'Teléfono'),
                 validator: _validarCampo,
               ),
               const SizedBox(height: 16),
@@ -157,9 +170,7 @@ class _AgregarContactoScreenState
 
               TextFormField(
                 controller: _direccionController,
-                decoration: const InputDecoration(
-                  labelText: 'Dirección',
-                ),
+                decoration: const InputDecoration(labelText: 'Dirección'),
                 validator: _validarCampo,
               ),
               const SizedBox(height: 16),
@@ -171,8 +182,8 @@ class _AgregarContactoScreenState
                   _fechaNacimiento == null
                       ? 'Seleccionar fecha de nacimiento'
                       : 'Nacimiento: ${_fechaNacimiento!.day}/'
-                          '${_fechaNacimiento!.month}/'
-                          '${_fechaNacimiento!.year}',
+                            '${_fechaNacimiento!.month}/'
+                            '${_fechaNacimiento!.year}',
                 ),
               ),
             ],

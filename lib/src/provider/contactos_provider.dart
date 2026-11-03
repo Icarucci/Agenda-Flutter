@@ -1,24 +1,30 @@
+import 'package:agenda/src/db/DBHelper.dart';
 import 'package:agenda/src/model/contacto.dart';
-// Incluye ChangeNotifier, que permite avisar cuando cambian los datos.
 import 'package:flutter/foundation.dart';
 
-
 class ContactosProvider extends ChangeNotifier {
-  // Guarda los contactos en memoria mientras exista este Provider.
-  // El guion bajo hace que la variable sea privada a este archivo.
-  final List<Contacto> _contactos = [];
+  List<Contacto> _contactos = [];
 
-  // Permite consultar los contactos desde otras partes de la app.
-  // Devuelve una lista que no puede modificarse directamente:
-  // los cambios deben hacerse mediante los métodos del Provider.
   List<Contacto> get contactos => List.unmodifiable(_contactos);
 
-  // Recibe un contacto y lo agrega a la lista.
-  void agregarContacto(Contacto contacto) {
-    _contactos.add(contacto);
-
-    // Avisa a los widgets que escuchan este Provider
-    // para que se reconstruyan y muestren la lista actualizada.
+  // Cargar contactos desde la base de datos SQLite
+  Future<void> cargarContactos() async {
+    _contactos = await DBHelper.obtenerContactos();
     notifyListeners();
+  }
+
+  Future<void> agregarContacto(Contacto contacto) async {
+    await DBHelper.insertarContacto(contacto);
+    await cargarContactos();
+  }
+
+  Future<void> actualizarContacto(Contacto contacto) async {
+    await DBHelper.actualizarContacto(contacto);
+    await cargarContactos();
+  }
+
+  Future<void> eliminarContacto(int id) async {
+    await DBHelper.eliminarContacto(id);
+    await cargarContactos();
   }
 }
