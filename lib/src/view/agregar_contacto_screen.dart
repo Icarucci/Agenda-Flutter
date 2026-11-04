@@ -89,6 +89,7 @@ class _AgregarContactoScreenState extends State<AgregarContactoScreen> {
     // Crea un contacto con los datos ingresados.
     // trim() sirve para eliminar los espacios al principio y al final.
     final nuevoContacto = Contacto(
+      id: widget.contacto?.id,
       nombre: _nombreController.text.trim(),
       apellido: _apellidoController.text.trim(),
       telefono: _telefonoController.text.trim(),
