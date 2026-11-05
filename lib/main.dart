@@ -12,7 +12,7 @@ void main() async {
   runApp(
     // Crea el Provider y lo pone a disposición de los widgets que están debajo de él en el árbol de la aplicación.
     ChangeNotifierProvider(
-      create: (context) => ContactosProvider(),
+      create: (context) => ContactosProvider()..cargarContactos(),
 
       // Nuestra aplicación podrá consultar este Provider desde el login y desde las pantallas de contactos.
       child: Agenda(isLoggedIn: isLoggedIn),
