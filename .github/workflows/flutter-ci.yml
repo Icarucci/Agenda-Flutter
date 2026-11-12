@@ -1,0 +1,28 @@
+name: Integracion continua Flutter
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validar-aplicacion:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Obtener codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Instalar dependencias
+        run: flutter pub get
+
+      - name: Analizar codigo
+        run: flutter analyze
+
+      - name: Ejecutar pruebas
+        run: flutter test
