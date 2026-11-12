@@ -1,4 +1,4 @@
-import 'package:agenda/src/model/contacto.dart';
+import 'package:agenda/src/model/Contacto.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
