@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:agenda/src/model/contacto.dart';
+import 'package:agenda/src/model/Contacto.dart';
 import 'package:agenda/src/provider/contactos_provider.dart';
 
 // Necesita estado porque la fecha seleccionada puede cambiar.
