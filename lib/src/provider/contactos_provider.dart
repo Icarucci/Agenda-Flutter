@@ -1,5 +1,5 @@
 import 'package:agenda/src/db/DBHelper.dart';
-import 'package:agenda/src/model/contacto.dart';
+import 'package:agenda/src/model/Contacto.dart';
 import 'package:flutter/foundation.dart';
 
 class ContactosProvider extends ChangeNotifier {
